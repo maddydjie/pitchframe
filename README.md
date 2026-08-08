@@ -255,3 +255,8 @@ have already cost time. Then [`docs/EXTENDING.md`](docs/EXTENDING.md).
 ## License
 
 MIT
+
+## The product
+
+[`docs/PRD.md`](docs/PRD.md) — problem, solution, features, architecture,
+user flow, tech stack, and how this differs from generative video models.
