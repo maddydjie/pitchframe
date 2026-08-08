@@ -70,9 +70,10 @@ rendering: more than one hero moment, a beat that doesn't serve the thesis, a
 hero under 30% of frames, a missing payoff, runtime beyond what the thesis
 earns — any of those fails the plan and it gets rewritten.
 
-**It captures the real interaction.** The hero moment is a before/after pair
-driven by Playwright: load the page, perform the action, capture the change. If
-the two frames come out identical, the capture fails rather than shipping a
+**It captures the real interaction.** The hero moment is *recorded*, not
+screenshotted: Playwright drives your product while Chrome's screencast captures
+every painted frame, and the cursor is logged to a track and drawn as a layer.
+A recording that produces too few distinct frames fails rather than shipping a
 "hero moment" where nothing happens.
 
 **Your brand comes from your code.** Colours are extracted from
@@ -103,7 +104,7 @@ skills, five subagents and three slash commands into `.claude/`.
 Also available as a Claude Code plugin:
 
 ```
-/plugin marketplace add <your-github-user>/pitchframe
+/plugin marketplace add Sachin-pro-dev/PITCHFRAME-push-to-prod
 /plugin install pitchframe@pitchframe
 ```
 
@@ -155,7 +156,8 @@ lines.
 /judge-user            a prospective user does the same
 ```
 
-Nine steps. Each writes a file, and each can be retried alone.
+Eleven steps. Each writes a file, and each can be retried alone. The full
+table is in [`docs/PRD.md`](docs/PRD.md); the short version:
 
 | Step | What happens | Output |
 |---|---|---|
@@ -191,11 +193,11 @@ reading-speed guess — the failure the audio-first design exists to prevent,
 arriving quietly. To render deliberately without narration, pass
 `--allow-silent` to `gen-voice.mjs`.
 
-**Music needs nothing.** Drop tracks in `template/public/audio/music/` and one
-gets picked per product; with none, `gen-audio.mjs` synthesizes a bed and a set
-of cues from your plan, so a fresh install is never silent. No music ships with
-the plugin — see [that folder's README](template/public/audio/music/README.md)
-for why.
+**Music needs nothing.** Three tracks ship with the plugin and one is picked
+per product, so a fresh install is scored with no setup. Drop your own in
+`template/public/audio/music/` and they join the rotation; with the folder
+emptied, `gen-audio.mjs` synthesizes a bed and cues from your plan instead, so
+it is never silent either way.
 
 More detail in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
