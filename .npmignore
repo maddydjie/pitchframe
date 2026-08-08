@@ -1,0 +1,44 @@
+# WARNING: the existence of this file makes npm ignore .gitignore completely.
+# Anything excluded there must be excluded here too, or it ships. This file
+# used to have four lines, and `npm pack` was carrying 821 JPEG frames of a
+# screen recording, the .work recon of a real product, and three licensed MP3s.
+
+# --- Never publish: other people's licensed assets -------------------------
+# Stock-music licences cover using a track in a video, not redistributing the
+# file. A published package hands the raw audio to everyone who installs it.
+# The music *mechanism* ships; the music does not. See
+# template/public/audio/music/README.md.
+# Music ships — the owner confirmed redistribution rights.
+
+# --- Never publish: secrets ------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# --- Never publish: one run's output against somebody's product ------------
+# Screen recordings are hundreds of JPEGs (~140MB), and .work holds recon of a
+# real site plus the judge's notes. Both are outputs of using the tool, not
+# part of it.
+**/.work/**
+**/runs/**
+**/public/assets/**
+!**/public/assets/.gitkeep
+**/audio/*.wav
+**/audio/audio.json
+**/audio/vo/**
+
+# --- Never publish: render artefacts ---------------------------------------
+**/out/**
+**/output*.mp4
+
+# --- Never publish: build and local junk -----------------------------------
+**/node_modules/**
+*.log
+*.docx
+*.zip
+.DS_Store
+Thumbs.db
+
+# Reference frames extracted from other companies' launch films. The written
+# analysis in skills/pitchframe-motion-language ships; the footage never does.
+**/frameybyframe/**

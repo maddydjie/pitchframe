@@ -1,0 +1,20 @@
+{
+  "name": "pitchframe",
+  "description": "Turns a codebase into a polished SaaS launch video. Researches your positioning, plans the scenes, critiques its own plan, captures your real UI, and renders an editable Remotion video — from one request inside Claude Code.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Sachin Baluragi"
+  },
+  "homepage": "https://github.com/Sachin-pro-dev/pitchframe",
+  "repository": "https://github.com/Sachin-pro-dev/pitchframe",
+  "license": "MIT",
+  "keywords": [
+    "video",
+    "remotion",
+    "launch",
+    "demo",
+    "marketing",
+    "saas",
+    "positioning"
+  ]
+}

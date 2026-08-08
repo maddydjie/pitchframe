@@ -1,0 +1,46 @@
+{
+  "name": "pitchframe",
+  "version": "0.1.0",
+  "description": "Turn your codebase into a launch video. A Claude Code plugin that finds the one moment that proves why your product should exist, captures it from your real UI, and renders an editable Remotion video.",
+  "type": "module",
+  "bin": {
+    "pitchframe": "bin/pitchframe.mjs"
+  },
+  "files": [
+    "bin",
+    "scripts",
+    "skills",
+    "commands",
+    "agents",
+    "template",
+    ".claude-plugin",
+    "README.md",
+    "docs",
+    "CLAUDE.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "video",
+    "remotion",
+    "launch-video",
+    "demo-video",
+    "saas",
+    "marketing",
+    "positioning"
+  ],
+  "author": "Sachin Baluragi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sachin-pro-dev/pitchframe.git"
+  },
+  "homepage": "https://github.com/Sachin-pro-dev/pitchframe#readme",
+  "bugs": {
+    "url": "https://github.com/Sachin-pro-dev/pitchframe/issues"
+  }
+}

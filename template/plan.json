@@ -1,0 +1,316 @@
+{
+  "video_thesis": "AI writes your code in seconds. Raphael is the one that reads it back.",
+  "hero_moment": "Raphael generates an app, then scans the code it just wrote and reports six critical findings with CWE ids.",
+  "structure": "thesis",
+  "duration_seconds": 52.7,
+  "fps": 30,
+  "total_frames": 1581,
+  "music": true,
+  "music_file": "too-ez.mp3",
+  "narration": [
+    {
+      "file": "vo/l1.wav",
+      "from": 0,
+      "frames": 131
+    },
+    {
+      "file": "vo/l2.wav",
+      "from": 131,
+      "frames": 126
+    },
+    {
+      "file": "vo/l3.wav",
+      "from": 257,
+      "frames": 141
+    },
+    {
+      "file": "vo/l4.wav",
+      "from": 398,
+      "frames": 150
+    },
+    {
+      "file": "vo/l6.wav",
+      "from": 596,
+      "frames": 115
+    },
+    {
+      "file": "vo/l7.wav",
+      "from": 711,
+      "frames": 110
+    },
+    {
+      "file": "vo/l8.wav",
+      "from": 821,
+      "frames": 140
+    },
+    {
+      "file": "vo/l9.wav",
+      "from": 961,
+      "frames": 176
+    },
+    {
+      "file": "vo/l10.wav",
+      "from": 1137,
+      "frames": 199
+    },
+    {
+      "file": "vo/l11.wav",
+      "from": 1336,
+      "frames": 122
+    },
+    {
+      "file": "vo/l12.wav",
+      "from": 1458,
+      "frames": 123
+    }
+  ],
+  "beats": [
+    {
+      "id": 1,
+      "type": "typography",
+      "layout": "centered",
+      "text": "Thirty seconds.",
+      "frames": [
+        0,
+        131
+      ]
+    },
+    {
+      "id": 2,
+      "type": "typography",
+      "layout": "centered",
+      "surface": "mesh",
+      "text": "That part is solved.",
+      "frames": [
+        131,
+        257
+      ]
+    },
+    {
+      "id": 3,
+      "type": "typography",
+      "layout": "centered",
+      "text": "Nobody reads it back.",
+      "accent_word": "Nobody",
+      "accent_style": "italic_serif",
+      "frames": [
+        257,
+        398
+      ]
+    },
+    {
+      "id": 4,
+      "type": "typography",
+      "layout": "centered",
+      "surface": "mesh",
+      "text": "Straight to production.",
+      "frames": [
+        398,
+        548
+      ]
+    },
+    {
+      "id": 5,
+      "type": "logo",
+      "transition": "dissolve",
+      "source": "logo.png",
+      "wordmark": "Raphael",
+      "plate": "none",
+      "frames": [
+        548,
+        596
+      ]
+    },
+    {
+      "id": 6,
+      "type": "interaction",
+      "recording": "scan",
+      "interaction_type": "click",
+      "target_element": {
+        "coordinates": {
+          "x": 62,
+          "y": 9
+        }
+      },
+      "zoom_target": {
+        "x": 62,
+        "y": 9
+      },
+      "shots": [
+        {
+          "frames": 115,
+          "framing": "closeup",
+          "crop": {
+            "x": 28,
+            "y": 3,
+            "w": 46,
+            "h": 46
+          },
+          "shot": "pull_focus",
+          "zoom": 1.08
+        }
+      ],
+      "segment": [
+        0,
+        0.085
+      ],
+      "frames": [
+        596,
+        711
+      ]
+    },
+    {
+      "id": 7,
+      "type": "interaction",
+      "recording": "scan",
+      "interaction_type": "click",
+      "target_element": {
+        "coordinates": {
+          "x": 62,
+          "y": 9
+        }
+      },
+      "shots": [
+        {
+          "frames": 110,
+          "framing": "bleed",
+          "shot": "push_in_reveal",
+          "zoom": 1.06
+        }
+      ],
+      "segment": [
+        0.085,
+        0.16
+      ],
+      "frames": [
+        711,
+        821
+      ]
+    },
+    {
+      "id": 8,
+      "type": "interaction",
+      "recording": "scan",
+      "interaction_type": "click",
+      "target_element": {
+        "coordinates": {
+          "x": 40,
+          "y": 22
+        }
+      },
+      "shots": [
+        {
+          "frames": 140,
+          "framing": "component",
+          "crop": {
+            "x": 24.4,
+            "y": 8,
+            "w": 51.5,
+            "h": 22
+          },
+          "shot": "drift_back",
+          "zoom": 1
+        }
+      ],
+      "segment": [
+        0.715,
+        0.855
+      ],
+      "frames": [
+        821,
+        961
+      ]
+    },
+    {
+      "id": 9,
+      "type": "interaction",
+      "recording": "scan",
+      "interaction_type": "click",
+      "target_element": {
+        "coordinates": {
+          "x": 40,
+          "y": 40
+        }
+      },
+      "shots": [
+        {
+          "frames": 176,
+          "framing": "component",
+          "crop": {
+            "x": 24.4,
+            "y": 30,
+            "w": 51.5,
+            "h": 26
+          },
+          "shot": "locked_off",
+          "zoom": 1
+        }
+      ],
+      "segment": [
+        0.855,
+        1
+      ],
+      "frames": [
+        961,
+        1137
+      ]
+    },
+    {
+      "id": 10,
+      "type": "interaction",
+      "recording": "scan",
+      "segment": [
+        0.95,
+        1
+      ],
+      "shots": [
+        {
+          "frames": 199,
+          "render": {
+            "archetype": "grid",
+            "items": [
+              "SAST Scan",
+              "DAST Scan",
+              "Secrets Scan",
+              "Dependency Scan",
+              "Export",
+              "Sync",
+              "Code",
+              "Diff",
+              "Preview",
+              "Files",
+              "Search",
+              "Locks"
+            ],
+            "active": 0
+          }
+        }
+      ],
+      "frames": [
+        1137,
+        1336
+      ]
+    },
+    {
+      "id": 11,
+      "type": "typography",
+      "layout": "centered",
+      "text": "Write it. Then read it back.",
+      "accent_word": "read it back",
+      "accent_style": "italic_serif",
+      "frames": [
+        1336,
+        1458
+      ]
+    },
+    {
+      "id": 12,
+      "type": "cta",
+      "url": "github.com/Rahul-Jadvani/raphael",
+      "frames": [
+        1458,
+        1581
+      ]
+    }
+  ]
+}

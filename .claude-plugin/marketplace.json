@@ -1,0 +1,20 @@
+{
+  "name": "pitchframe",
+  "owner": {
+    "name": "Sachin Baluragi"
+  },
+  "metadata": {
+    "description": "Pitchframe — autonomous launch video generation inside Claude Code.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "pitchframe",
+      "source": "./",
+      "description": "Generate a polished, on-trend SaaS launch video from your codebase. One request, no script, no editor — output is editable React source.",
+      "version": "0.1.0",
+      "category": "productivity",
+      "keywords": ["video", "remotion", "launch", "marketing"]
+    }
+  ]
+}

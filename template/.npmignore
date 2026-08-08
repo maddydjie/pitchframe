@@ -1,0 +1,26 @@
+# Paths here are relative to template/.
+#
+# The root .npmignore does not prune inside directories named in package.json's
+# `files` allowlist, and `template` is one of them — so a root-only ignore list
+# published 821 recording frames, the .work recon of a real product, and three
+# licensed MP3s. This file is the one that actually governs what leaves here.
+
+# Licensed music. The mechanism ships, the tracks never do — a stock licence
+# covers using a track in a video, not handing the file to every installer.
+# Music ships — the owner confirmed redistribution rights.
+
+# Outputs of a run against someone's product, not part of the tool.
+.work/
+runs/
+public/assets/*
+!public/assets/.gitkeep
+public/audio/*.wav
+public/audio/audio.json
+public/audio/vo/
+
+# Render artefacts and build junk.
+out/
+output*.mp4
+node_modules/
+.env
+.env.*

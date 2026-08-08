@@ -1,0 +1,248 @@
+{
+  "structure": "thesis",
+  "fps": 30,
+  "thesis": "AI writes your code in seconds. Raphael is the one that reads it back.",
+  "hero_moment": "Raphael generates an app, then scans the code it just wrote and reports six critical findings with CWE ids.",
+  "voice": {
+    "name": "Ananya",
+    "language": "en"
+  },
+  "music_file": "too-ez.mp3",
+  "lines": [
+    {
+      "id": "l1",
+      "say": "An AI agent can write a working app in about thirty seconds.",
+      "show": {
+        "type": "typography",
+        "layout": "centered",
+        "text": "Thirty seconds."
+      }
+    },
+    {
+      "id": "l2",
+      "say": "That part is solved. Every tool on the market does it now.",
+      "show": {
+        "type": "typography",
+        "layout": "centered",
+        "surface": "mesh",
+        "text": "That part is solved."
+      }
+    },
+    {
+      "id": "l3",
+      "say": "Here is the part that isn't. Nobody reads the code that comes back.",
+      "show": {
+        "type": "typography",
+        "layout": "centered",
+        "text": "Nobody reads it back.",
+        "accent_word": "Nobody",
+        "accent_style": "italic_serif"
+      }
+    },
+    {
+      "id": "l4",
+      "say": "It goes straight to production, with whatever the model happened to write inside it.",
+      "show": {
+        "type": "typography",
+        "layout": "centered",
+        "surface": "mesh",
+        "text": "Straight to production."
+      }
+    },
+    {
+      "id": "l5",
+      "say": null,
+      "show": {
+        "type": "logo",
+        "transition": "dissolve",
+        "source": "logo.png",
+        "wordmark": "Raphael",
+        "plate": "none"
+      }
+    },
+    {
+      "id": "l6",
+      "say": "Raphael builds your app in the browser, the same way.",
+      "show": {
+        "type": "interaction",
+        "recording": "scan",
+        "interaction_type": "click",
+        "target_element": {
+          "coordinates": {
+            "x": 62,
+            "y": 9
+          }
+        },
+        "zoom_target": {
+          "x": 62,
+          "y": 9
+        },
+        "shots": [
+          {
+            "frames": 3,
+            "framing": "closeup",
+            "crop": {
+              "x": 28,
+              "y": 3,
+              "w": 46,
+              "h": 46
+            },
+            "shot": "pull_focus",
+            "zoom": 1.08
+          }
+        ],
+        "segment": [
+          0.0,
+          0.085
+        ]
+      }
+    },
+    {
+      "id": "l7",
+      "say": "Then it turns around and scans the code it just wrote.",
+      "show": {
+        "type": "interaction",
+        "recording": "scan",
+        "interaction_type": "click",
+        "target_element": {
+          "coordinates": {
+            "x": 62,
+            "y": 9
+          }
+        },
+        "shots": [
+          {
+            "frames": 4,
+            "framing": "bleed",
+            "shot": "push_in_reveal",
+            "zoom": 1.06
+          }
+        ],
+        "segment": [
+          0.085,
+          0.16
+        ]
+      }
+    },
+    {
+      "id": "l8",
+      "say": "Six critical findings. In a game it wrote thirty seconds ago.",
+      "show": {
+        "type": "interaction",
+        "recording": "scan",
+        "interaction_type": "click",
+        "target_element": {
+          "coordinates": {
+            "x": 40,
+            "y": 22
+          }
+        },
+        "shots": [
+          {
+            "frames": 4,
+            "framing": "component",
+            "crop": {
+              "x": 24.4,
+              "y": 8,
+              "w": 51.5,
+              "h": 22
+            },
+            "shot": "drift_back",
+            "zoom": 1
+          }
+        ],
+        "segment": [
+          0.715,
+          0.855
+        ]
+      }
+    },
+    {
+      "id": "l9",
+      "say": "Every finding carries a rule, a line number, and a C W E reference.",
+      "show": {
+        "type": "interaction",
+        "recording": "scan",
+        "interaction_type": "click",
+        "target_element": {
+          "coordinates": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        "shots": [
+          {
+            "frames": 4,
+            "framing": "component",
+            "crop": {
+              "x": 24.4,
+              "y": 30,
+              "w": 51.5,
+              "h": 26
+            },
+            "shot": "locked_off",
+            "zoom": 1
+          }
+        ],
+        "segment": [
+          0.855,
+          1.0
+        ]
+      }
+    },
+    {
+      "id": "l10",
+      "say": "Static analysis, dependencies, secrets, and a live scan against the running app.",
+      "show": {
+        "type": "interaction",
+        "recording": "scan",
+        "segment": [
+          0.95,
+          1.0
+        ],
+        "shots": [
+          {
+            "frames": 4,
+            "render": {
+              "archetype": "grid",
+              "items": [
+                "SAST Scan",
+                "DAST Scan",
+                "Secrets Scan",
+                "Dependency Scan",
+                "Export",
+                "Sync",
+                "Code",
+                "Diff",
+                "Preview",
+                "Files",
+                "Search",
+                "Locks"
+              ],
+              "active": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "l11",
+      "say": "The agent that writes your code should be the one that checks it.",
+      "show": {
+        "type": "typography",
+        "layout": "centered",
+        "text": "Write it. Then read it back.",
+        "accent_word": "read it back",
+        "accent_style": "italic_serif"
+      }
+    },
+    {
+      "id": "l12",
+      "say": "Raphael. Bring ideas to life in seconds.",
+      "show": {
+        "type": "cta",
+        "url": "github.com/Rahul-Jadvani/raphael"
+      }
+    }
+  ]
+}
