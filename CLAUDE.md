@@ -130,14 +130,24 @@ The score is *derived from the plan*, not authored. So:
 
 ## Invariants
 
-Verify these still hold after any change:
+Verify these still hold after any change. Where the check column names a
+command, that invariant is **enforced** rather than remembered — which is the
+difference between the ones that held and the ones that did not.
+
+`npm test` runs all of them that are pure. Run it after every edit; it is
+faster than the typecheck.
 
 | Invariant | Why | How to check |
 |---|---|---|
 | Zero colour literals in `template/src/**/*.tsx` | Otherwise two products' videos look identical | `grep -rnE '#[0-9a-fA-F]{3,8}\|rgba?\([0-9]' template/src --include=*.tsx` → only `theme.ts` |
-| Exactly one `interaction` beat per plan | Two hero moments means neither gets proven | critique skill, check 1 |
-| Hero beat ≥ 30% of `total_frames` | Below that it's a feature, not a spine | critique skill, check 3 |
-| Every plan has a payoff beat | Without it the hero is a screenshot, not a claim | critique skill, check 4 |
+| Exactly one hero **recording** — *not* one beat | Two hero moments means neither gets proven | `npm test`; `checkOneHeroRecording` |
+| Hero beat ≥ 30% of `total_frames` | Below that it's a feature, not a spine | `npm test`; `checkHeroShare` |
+| Hero cut into ≥ `ceil(seconds / 6)` shots | One framing held is the "this was generated" tell | `npm test`; `checkHeroShotFloor` |
+| Every plan has a payoff beat | Without it the hero is a screenshot, not a claim | `npm test`; `checkPayoff` |
+| The script obeys `.work/direction.json` unless `director.md` states the override | A default that contradicts a skill wins silently | `node scripts/check-conformance.mjs` |
+| Drawn labels exist in `.work/recon.json` | Invented words are a lie that renders beautifully | `node scripts/check-script.mjs` |
+| `template/scripts/` matches `scripts/` | A stale copy silently runs the old script | `npm run sync`; `npm test` |
+| `plan.json` keys are all declared in `ScenePlan` | Drift fails at render time with a confusing error | `npm test` |
 | `theme.ts` regenerated per product | Same colours across products = the pipeline is broken | render one frame under two palettes; they must differ byte-wise |
 | No springs, bounces or elastic easing | Reads as template, not film | `template/src/lib/motion.ts` is the only source of curves |
 | One camera system | Two drift apart and shots stop matching | `grep -rn "perspective" template/src` → only `Stage.tsx` |

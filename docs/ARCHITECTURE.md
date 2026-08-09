@@ -31,20 +31,30 @@ That choice has consequences worth knowing:
 
 ## The pipeline
 
-Nine steps. Each writes a file, and a failed step is retried alone.
+Each step writes a file, and a failed step is retried alone.
 
 | # | Step | Writes |
 |---|---|---|
 | 1 | Scout the live site | `.work/recon.json` |
 | 2 | Fetch the real logo | `public/assets/logo.*` |
-| 3 | Extract palette, choose the look | `palette.json` → `src/theme.ts` |
-| 4 | **Direct** — write the script *(Opus)* | `script.json`, `.work/director.md` |
-| 5 | Record what the script names *(Sonnet)* | `assets/<name>/*.jpg` + cursor track |
-| 6 | **Voice it** | `public/audio/vo/*.wav`, `.work/voice.json` |
-| 7 | **Cut the picture to the voice** | `plan.json` |
-| 8 | Score it | `public/audio/*.wav` |
-| 9 | Render *(Opus)* | `output.mp4` |
+| 3 | Extract the palette | `palette.json` |
+| 4 | Choose the look | `.work/direction.json` |
+| 5 | Apply it | `src/theme.ts` |
+| 6 | **Direct** — write the script *(Opus)* | `script.json`, `.work/director.md` |
+| 6b | Check the script — conformance, grounding, register | edited `script.json` |
+| 7 | Record what the script names *(Sonnet)* | `assets/<name>/*.jpg` + cursor track |
+| 8 | **Voice it** | `public/audio/vo/*.wav`, `.work/voice.json` |
+| 9 | **Cut the picture to the voice** | `plan.json` |
+| 10 | Score it | `public/audio/*.wav` |
+| 11 | Render *(Opus)* | `output.mp4` |
+| 12 | **Look at it**, repair once | `.work/inspection.json`, `.work/frames/` |
+| 13 | File the run | `runs/<product>-<stamp>/` |
 | — | Judge, on request | `.work/judgement.md` → edited `script.json` |
+
+This table and the one in `skills/pitchframe/SKILL.md` are checked against each
+other by `tests/schema-drift.test.mjs`. They disagreed for a while — nine steps
+here, eleven there — which is the documentation equivalent of the schema drift
+below: nothing fails, and the reader believes whichever file they opened.
 
 ### The script is the spine
 

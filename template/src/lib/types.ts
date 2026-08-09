@@ -447,6 +447,18 @@ export type ScenePlan = {
   video_thesis: string;
   hero_moment: string;
 
+  /**
+   * Which shape the Director chose — `thesis` builds to one moment, `mosaic`
+   * gathers several serving one claim.
+   *
+   * Carried into the plan so conformance can check the video against the
+   * direction the Director was handed, without re-reading
+   * `.work/direction.json` at render time. It was written into plan.json
+   * before it was declared here, which is precisely the drift the schema test
+   * now guards.
+   */
+  structure?: "thesis" | "mosaic";
+
   duration_seconds: number;
   fps: number;
   total_frames: number;
