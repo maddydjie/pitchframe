@@ -114,6 +114,19 @@ genuinely cannot work for this product, say so in `.work/director.md` and
 change *that one field* — never silently substitute the look you would have
 picked anyway, which is the behaviour that made every video identical.
 
+And that is now checked rather than asked for:
+
+```bash
+node pitchframe/scripts/check-conformance.mjs --project pitchframe
+```
+
+Run it the moment `script.json` exists, **before capture and before voicing**.
+Non-zero means the script went its own way without saying so. Fix the script,
+or state the override on one line of `.work/director.md` naming the field —
+`` Overriding `structure`: <reason> ``. Do not proceed past it: capture and
+voicing are the expensive steps, and this costs a re-direct instead of a
+re-render.
+
 ### Every run is filed
 
 ```bash
