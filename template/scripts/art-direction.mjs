@@ -141,7 +141,10 @@ const hashOf = (str) => {
   }
   return h >>> 0;
 };
-const seed = hashOf(`${product}|${palette.primary ?? ""}|${palette.accent ?? ""}`);
+const seedFor = (name, pal = {}) =>
+  hashOf(`${name}|${pal.primary ?? ""}|${pal.accent ?? ""}`);
+
+const seed = seedFor(product, palette);
 const pick = (list, salt) => list[(seed + salt) % list.length];
 
 /* ------------------------------------------------- the one derived choice */
@@ -191,11 +194,41 @@ const used = new Set(history.map((h) => h.signature));
  * is what makes variety checks useless — too broad and everything collides,
  * too narrow and nothing does.
  */
-const signatureOf = (d) =>
-  [d.style, d.structure, d.type_layout, d.hero_progression.join(">")].join("/");
+export const signatureOf = (d) =>
+  [d.style, d.structure, d.type_layout, d.framing, d.hero_progression.join(">")].join("/");
 
-const build = (rotation) => {
+/**
+ * The establishing framing, before the hero starts cutting.
+ *
+ * `bleed` is weighted twice because it is the opinionated default: a
+ * screenshot centred in a rounded card with margin on all four sides reads as
+ * a slide, and a rotation that reached `contained` as often as `bleed` would
+ * make the most literal look one video in four.
+ */
+const FRAMINGS = ["bleed", "bleed", "component", "closeup", "contained"];
+
+/**
+ * `chrome` and `framing` are one decision, not two.
+ *
+ * They were two, and the pair is where a default silently reverted a fix:
+ * chrome defaulted to `macos`, chrome forces `contained` geometry, and so the
+ * framing work landed and was undone in the same session across three videos
+ * while the skill still said `bleed` was the default. A window whose edges
+ * have left the frame is not a window — so the framing decides and the chrome
+ * follows it, and the contradiction becomes unrepresentable.
+ */
+const CHROME_FOR = {
+  bleed: "none",
+  closeup: "none",
+  component: "none",
+  contained: "macos",
+};
+
+export const buildDirection = ({ product, lightUI, rotation, tracks = [], palette = {} }) => {
+  const seed = seedFor(product, palette);
+  const pick = (list, salt) => list[(seed + salt) % list.length];
   const styles = lightUI ? DARK_FRAME : STYLES;
+
   const direction = {
     product,
     style: pick(styles, rotation * 7),
@@ -203,14 +236,19 @@ const build = (rotation) => {
     type_layout: pick(LAYOUTS, rotation * 5),
     accent_style: pick(ACCENTS, rotation * 11),
     transition: pick(TRANSITIONS, rotation * 13),
+    framing: pick(FRAMINGS, rotation * 29),
     hero_progression: pick(HERO_PROGRESSIONS, rotation * 2),
     drawn: pick(DRAWN, rotation * 17),
     three_d: pick(THREE_D, rotation * 19),
-    music: TRACKS.length ? pick(TRACKS, rotation * 23) : null,
+    music: tracks.length ? pick(tracks, rotation * 23) : null,
   };
+  direction.chrome = CHROME_FOR[direction.framing];
   direction.signature = signatureOf(direction);
   return direction;
 };
+
+const build = (rotation) =>
+  buildDirection({ product, lightUI, rotation, tracks: TRACKS, palette });
 
 /**
  * Rotate until the look is one no previous run used.
@@ -219,45 +257,51 @@ const build = (rotation) => {
  * used the honest thing is to say so and reuse the least recent, rather than
  * loop forever or invent an axis nobody rendered.
  */
-let direction = null;
-let rotation = 0;
-for (; rotation < 60; rotation++) {
-  const candidate = build(rotation);
-  if (!used.has(candidate.signature)) {
-    direction = candidate;
-    break;
+const isMain =
+  process.argv[1] && import.meta.url.endsWith(path.basename(process.argv[1]));
+
+if (isMain) {
+  let direction = null;
+  let rotation = 0;
+  for (; rotation < 60; rotation++) {
+    const candidate = build(rotation);
+    if (!used.has(candidate.signature)) {
+      direction = candidate;
+      break;
+    }
   }
-}
-if (!direction) {
-  direction = build(0);
-  log(`every look in the matrix has been used — repeating "${direction.signature}"`);
-}
+  if (!direction) {
+    direction = build(0);
+    log(`every look in the matrix has been used — repeating "${direction.signature}"`);
+  }
 
-direction.rotation = rotation;
-direction.light_ui = lightUI;
-direction.previous_runs = history.length;
+  direction.rotation = rotation;
+  direction.light_ui = lightUI;
+  direction.previous_runs = history.length;
 
-fs.mkdirSync(WORK_DIR, { recursive: true });
-fs.writeFileSync(
-  path.join(WORK_DIR, "direction.json"),
-  JSON.stringify(direction, null, 2),
-);
-
-/* ------------------------------------------------------------------ report */
-
-log(`product      ${product}${lightUI ? " (light UI → dark frame)" : ""}`);
-log(`style        ${direction.style}`);
-log(`structure    ${direction.structure}`);
-log(`type         ${direction.type_layout}, accent ${direction.accent_style}`);
-log(`hero         ${direction.hero_progression.join(" → ")}`);
-log(`drawn        ${direction.drawn.length ? direction.drawn.join(", ") : "none (all footage)"}`);
-log(`3D           ${direction.three_d ?? "none"}`);
-log(`music        ${direction.music ?? "none on disk — synthesized bed"}`);
-log(`signature    ${direction.signature}`);
-if (history.length) {
-  log(
-    rotation > 0
-      ? `rotated ${rotation}× past ${history.length} previous run(s) to avoid a repeat`
-      : `${history.length} previous run(s), no collision`,
+  fs.mkdirSync(WORK_DIR, { recursive: true });
+  fs.writeFileSync(
+    path.join(WORK_DIR, "direction.json"),
+    JSON.stringify(direction, null, 2),
   );
+
+  /* ---------------------------------------------------------------- report */
+
+  log(`product      ${product}${lightUI ? " (light UI → dark frame)" : ""}`);
+  log(`style        ${direction.style}`);
+  log(`structure    ${direction.structure}`);
+  log(`type         ${direction.type_layout}, accent ${direction.accent_style}`);
+  log(`framing      ${direction.framing}, chrome ${direction.chrome}`);
+  log(`hero         ${direction.hero_progression.join(" → ")}`);
+  log(`drawn        ${direction.drawn.length ? direction.drawn.join(", ") : "none (all footage)"}`);
+  log(`3D           ${direction.three_d ?? "none"}`);
+  log(`music        ${direction.music ?? "none on disk — synthesized bed"}`);
+  log(`signature    ${direction.signature}`);
+  if (history.length) {
+    log(
+      rotation > 0
+        ? `rotated ${rotation}× past ${history.length} previous run(s) to avoid a repeat`
+        : `${history.length} previous run(s), no collision`,
+    );
+  }
 }

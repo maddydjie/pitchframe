@@ -272,3 +272,34 @@ export const checkColourLiterals = (files) =>
       message: `${rel} contains a colour literal — every colour must resolve through theme.ts or two products get the same video`,
       target: rel,
     }));
+
+/**
+ * A hero held on one framing is the "this was generated" tell.
+ *
+ * Bigger than colour, bigger than easing. Sixteen samples of a reference
+ * launch film gave sixteen different compositions; three Pitchframe videos in
+ * a row held one window for thirty seconds and looked like the same video
+ * recoloured. The reference films cut every one to three seconds — six is the
+ * loosest floor that still forbids the failure.
+ *
+ * Shots are counted across every beat sharing the recording, because the take
+ * is continuous and the beat boundaries are where the *narration* happened to
+ * break, not where the camera did.
+ */
+export const checkHeroShotFloor = (plan, fps = plan.fps ?? 30) => {
+  const hero = heroBeats(plan);
+  if (!hero.length) return [];
+  const frames = hero.reduce((a, b) => a + (b.frames[1] - b.frames[0]), 0);
+  const seconds = frames / fps;
+  const shots = hero.reduce((a, b) => a + (b.shots?.length || 1), 0);
+  const needed = Math.max(1, Math.ceil(seconds / 6));
+  if (shots >= needed) return [];
+  return [
+    {
+      check: "hero_shots",
+      severity: "fail",
+      message: `the hero runs ${seconds.toFixed(1)}s on ${shots} shot${shots === 1 ? "" : "s"} and needs at least ${needed} — one framing held is the clearest tell that a video was generated`,
+      target: "beats[].shots",
+    },
+  ];
+};
