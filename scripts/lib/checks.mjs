@@ -100,3 +100,91 @@ export const checkPayoff = (plan) => {
     },
   ];
 };
+
+/* ------------------------------------------------------------- contrast */
+
+/**
+ * Contrast is arithmetic on the theme, not a property of the render.
+ *
+ * `surfaceColors()` in src/lib/surface.ts already decides which token a beat
+ * draws with given what it sits on. That decision is reproducible here without
+ * mounting anything, which is why this belongs in the static half: the first
+ * light beat shipped white display type on pale lavender at 1.57:1, and every
+ * component that gains a light context can repeat it.
+ *
+ * Rec. 709 coefficients and the sRGB transfer curve, per WCAG 2.1.
+ */
+const channel = (v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
+
+export const relativeLuminance = (hex) => {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex ?? "");
+  if (!m) return null;
+  const n = parseInt(m[1], 16);
+  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((c) => channel(c / 255));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+
+export const contrastRatio = (a, b) => {
+  const la = relativeLuminance(a);
+  const lb = relativeLuminance(b);
+  if (la === null || lb === null) return null;
+  return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+};
+
+/** Beat types that render type. An interaction beat draws footage, not words. */
+const TEXT_BEATS = new Set(["typography", "logo", "cta", "ui"]);
+
+/**
+ * The worst stop of the field the beat sits on, not its nicest one.
+ *
+ * A light surface is a *gradient*, and type crossing it meets every stop on
+ * the way. Checking the lightest one is how a beat passes a review and still
+ * loses its last word into the dark corner of the mesh — so the darkest light
+ * stop is the honest backdrop for dark type.
+ *
+ * `mesh` is a mid-tone field built from the accent and white still clears
+ * 4.5:1 on it, so only `light` inverts — the same rule surfaceColors() encodes.
+ */
+const backdropFor = (surface, theme) =>
+  surface === "light" ? theme.MESH_LIGHT_DEEP ?? "#c2c2c2" : theme.BACKGROUND;
+
+/**
+ * 4.5:1 for body, 3:1 for the accent word.
+ *
+ * The accent is always display type — the WCAG large-text threshold is the
+ * right one and using 4.5 there would fail correct videos.
+ */
+const BODY_MIN = 4.5;
+const DISPLAY_MIN = 3;
+
+export const checkContrast = (plan, theme) => {
+  const out = [];
+  plan.beats.forEach((b, i) => {
+    if (!TEXT_BEATS.has(b.type)) return;
+    const onLight = b.surface === "light";
+    const backdrop = backdropFor(b.surface, theme);
+
+    const pairs = [
+      { role: "text", colour: onLight ? theme.TEXT_ON_LIGHT : theme.TEXT, min: BODY_MIN },
+    ];
+    if (b.accent_word) {
+      pairs.push({
+        role: "accent",
+        colour: onLight ? theme.ACCENT_ON_LIGHT : theme.ACCENT,
+        min: DISPLAY_MIN,
+      });
+    }
+
+    for (const { role, colour, min } of pairs) {
+      const ratio = contrastRatio(colour, backdrop);
+      if (ratio === null || ratio >= min) continue;
+      out.push({
+        check: "contrast",
+        severity: "fail",
+        message: `beat ${b.id} (${b.type}, surface ${b.surface ?? "dark"}) draws its ${role} ${colour} on ${backdrop} at ${ratio.toFixed(2)}:1 — below ${min}:1 it is invisible in the video`,
+        target: `beats[${i}].surface`,
+      });
+    }
+  });
+  return out;
+};
