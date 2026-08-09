@@ -193,3 +193,46 @@ change and why. Two hundred words.
 
 The judge reads it. So does the founder. A decision you cannot justify in a
 sentence is usually the wrong one.
+
+## Before you hand the script on
+
+Two checks, then two readings. All four happen **before capture and before
+voicing**, which is the only reason they are cheap: a line rewritten here costs
+one regenerated clip, and the same line rewritten after the render costs a
+re-voice and a re-render.
+
+```bash
+node pitchframe/scripts/check-conformance.mjs --project pitchframe
+node pitchframe/scripts/check-script.mjs --project pitchframe
+```
+
+Neither is advisory, and a non-zero exit stops the run.
+
+- **Conformance** means you changed something the direction owns. Either
+  conform, or state the override on one line of `.work/director.md` naming the
+  field — `` Overriding `structure`: <reason> ``. A sentence that merely
+  mentions the field does not count.
+- **Script** means an invented drawn label, an ungrounded thesis, or the
+  marketing register. Invented labels are not a style note: a rebuilt component
+  carrying the product's real words is truthful, and one carrying words you
+  made up is a lie that renders beautifully.
+
+If it reports that recon is missing, those checks were **skipped, not passed** —
+do not read that as a clean bill.
+
+Then read your own script back once, as two people who are not you:
+
+- **An investor.** Do they know by the end *why this should exist*, rather than
+  what it does? If a line would make them ask "so what?", rewrite that line.
+- **Someone who has the problem.** Do they recognise their own situation in the
+  first two lines? If the opening is about the product rather than about them,
+  rewrite the opening.
+
+Rewrite at most the lines that fail. This is not a second draft of the whole
+script — you wrote it for reasons, and the personas are a check on the weakest
+lines, not a mandate to start over.
+
+This is deliberately not `/judge-vc` or `/judge-user`. Those are the founder's,
+run after watching the finished video, and they trade a re-render for taste.
+This pass costs nothing and catches the lines that were never going to survive
+one.
