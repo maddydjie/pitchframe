@@ -24,6 +24,7 @@ import {
   checkPayoff,
   checkZoomBlurCoupling,
 } from "./lib/checks.mjs";
+import { measureFrames } from "./lib/extract.mjs";
 
 /** theme.ts is generated, so its shape is stable enough to read with a regex. */
 export const parseTheme = (source) => {
@@ -69,13 +70,22 @@ if (isMain) {
   const findings = runStaticChecks({ plan, theme, files });
   const workDir = path.join(project, ".work");
   fs.mkdirSync(workDir, { recursive: true });
-  fs.writeFileSync(
-    path.join(workDir, "inspection.json"),
-    JSON.stringify({ findings, frames: [] }, null, 2),
+
+  const { measured, findings: frameFindings } = measureFrames(
+    plan,
+    path.join(project, "output.mp4"),
+    path.join(workDir, "frames"),
+    project,
   );
 
-  if (!findings.length) process.stdout.write("inspect: no findings\n");
-  for (const f of findings) {
+  const all = [...findings, ...frameFindings];
+  fs.writeFileSync(
+    path.join(workDir, "inspection.json"),
+    JSON.stringify({ findings: all, frames: measured }, null, 2),
+  );
+
+  if (!all.length) process.stdout.write("inspect: no findings\n");
+  for (const f of all) {
     process.stdout.write(`inspect: ${f.severity} ${f.check} — ${f.message}\n  fix: ${f.target}\n`);
   }
 }
