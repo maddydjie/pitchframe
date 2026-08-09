@@ -75,9 +75,15 @@ export const MESH_LIGHT_DEEP = "#c2c2c2";
  * on pale lavender at about 1.6:1 — the same class of bug as the light-theme
  * text flip above, and just as invisible until you look at a frame. Any
  * component that can appear on a light surface must switch to these.
+ *
+ * Both are darkened until they *measure* clear of MESH_LIGHT_DEEP — 4.5:1 for
+ * the text, 3:1 for the accent, which is always display type. They used to be
+ * fixed mixes, and the accent's landed at 1.89:1 for a mid-tone brand colour:
+ * the very failure the paragraph above describes, reintroduced one line below
+ * it, because a ratio cannot know how bright the colour it is handed is.
  */
 export const TEXT_ON_LIGHT = "#353535";
-export const ACCENT_ON_LIGHT = "#8c8c8c";
+export const ACCENT_ON_LIGHT = "#676767";
 
 /**
  * The window traffic lights — and these are deliberately NOT derived.

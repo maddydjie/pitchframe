@@ -77,6 +77,32 @@ const ensureLegible = (color, background, text) => {
   return { color: out, adjusted: steps > 0, steps };
 };
 
+/**
+ * The same idea for a light surface: walk a colour toward black until it
+ * clears `min` against the *darkest* stop of the mesh it sits on.
+ *
+ * A fixed mix ratio is what failed. `ACCENT_ON_LIGHT` was `mix(ACCENT, black,
+ * 0.42)` regardless of what the accent was, and for a mid-tone accent that
+ * lands at 1.89:1 on `MESH_LIGHT_DEEP` — invisible, and the identical failure
+ * the comment above `TEXT_ON_LIGHT` describes being fixed for text and not for
+ * the accent beside it. A ratio cannot know how bright the colour it is given
+ * happens to be; only measuring can.
+ *
+ * The darkest stop rather than the lightest because type crossing a gradient
+ * meets every stop on the way, and the one it can disappear into is the one
+ * that decides.
+ */
+const darkenUntil = (color, backdrop, min) => {
+  if (!color) return { color, adjusted: false, steps: 0 };
+  let out = color;
+  let steps = 0;
+  while (contrast(out, backdrop) < min && steps < 24) {
+    out = mix(out, "#000000", 0.06);
+    steps++;
+  }
+  return { color: out, adjusted: steps > 0, steps };
+};
+
 
 /* --------------------------------------------------------------- hue math */
 
@@ -273,6 +299,19 @@ const FINAL = STYLES[STYLE_NAME](ACCENT, SURFACE_BASE);
 const MESH = FINAL.mesh;
 const LIGHT_MESH = FINAL.lightMesh;
 
+/*
+ * The light-surface pair, measured against the darkest mesh stop rather than
+ * mixed by a fixed ratio. The 0.78 and 0.42 they started as were a guess that
+ * happened to hold for text and did not for the accent — 1.89:1 on a mid-tone
+ * brand colour, invisible in the video and undetectable in the code.
+ */
+const LIGHT_BACKDROP = LIGHT_MESH[2];
+const onLightText = darkenUntil(mix(ACCENT, "#000000", 0.78), LIGHT_BACKDROP, 4.5);
+// 3:1 is the WCAG large-text threshold, and the accent is always display type.
+const onLightAccent = darkenUntil(mix(ACCENT, "#000000", 0.42), LIGHT_BACKDROP, 3);
+const TEXT_ON_LIGHT_FINAL = onLightText.color;
+const ACCENT_ON_LIGHT_FINAL = onLightAccent.color;
+
 const fonts = p.fonts ?? {};
 const SANS = fonts.sans ?? "Inter";
 const SERIF = fonts.serif ?? "Instrument Serif";
@@ -354,9 +393,15 @@ export const MESH_LIGHT_DEEP = ${JSON.stringify(LIGHT_MESH[2])};
  * on pale lavender at about 1.6:1 — the same class of bug as the light-theme
  * text flip above, and just as invisible until you look at a frame. Any
  * component that can appear on a light surface must switch to these.
+ *
+ * Both are darkened until they *measure* clear of MESH_LIGHT_DEEP — 4.5:1 for
+ * the text, 3:1 for the accent, which is always display type. They used to be
+ * fixed mixes, and the accent's landed at 1.89:1 for a mid-tone brand colour:
+ * the very failure the paragraph above describes, reintroduced one line below
+ * it, because a ratio cannot know how bright the colour it is handed is.
  */
-export const TEXT_ON_LIGHT = ${JSON.stringify(mix(ACCENT, "#000000", 0.78))};
-export const ACCENT_ON_LIGHT = ${JSON.stringify(mix(ACCENT, "#000000", 0.42))};
+export const TEXT_ON_LIGHT = ${JSON.stringify(TEXT_ON_LIGHT_FINAL)};
+export const ACCENT_ON_LIGHT = ${JSON.stringify(ACCENT_ON_LIGHT_FINAL)};
 
 /**
  * The window traffic lights — and these are deliberately NOT derived.
