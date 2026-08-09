@@ -68,11 +68,14 @@ alone — never restart, and never repeat a web search you already paid for.
 | 4 | **Choose the look** | — | `.work/direction.json` |
 | 5 | Apply it | — | `src/theme.ts` |
 | 6 | **Direct** — write the script | **agent** `pitchframe-director` | `script.json`, `.work/director.md` |
+| 6b | **Check the script** — conformance, grounding, register | **agent** `pitchframe-director` | edited `script.json` |
 | 7 | Record what the script names | **agent** `pitchframe-capture` | `assets/<name>/*.jpg` + track |
 | 8 | **Voice it** | — | `public/audio/vo/*.wav`, `.work/voice.json` |
 | 9 | **Cut the picture to the voice** | — | `plan.json` |
 | 10 | Score it | — | `public/audio/*.wav` |
-| 11 | Render, then **file the run** | **agent** `pitchframe-remotion` | `output.mp4` → `runs/<product>-<stamp>/` |
+| 11 | Render | **agent** `pitchframe-remotion` | `output.mp4` |
+| 12 | **Look at it**, repair once | `pitchframe-review` | `.work/inspection.json`, `.work/frames/` |
+| 13 | File the run | — | `runs/<product>-<stamp>/` |
 | — | Judge, *on request only* | `pitchframe-judge` | `.work/judgement.md` |
 
 **The script is the spine.** Step 6 decides everything that is *said and
