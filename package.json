@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "Turn your codebase into a launch video. A Claude Code plugin that finds the one moment that proves why your product should exist, captures it from your real UI, and renders an editable Remotion video.",
   "type": "module",
+  "scripts": {
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "sync": "node scripts/sync-template.mjs --write"
+  },
   "bin": {
     "pitchframe": "bin/pitchframe.mjs"
   },
