@@ -188,3 +188,87 @@ export const checkContrast = (plan, theme) => {
   });
   return out;
 };
+
+/* ------------------------------------------------------- contradictions */
+
+/**
+ * Every shot in a hero, whether written as `shots` or as the one-shot
+ * shorthand on the beat itself.
+ *
+ * `resolveShots()` in lib/heroShots.ts owns the precedence rule at render
+ * time; this mirrors only the enumeration, never the precedence, because
+ * re-implementing precedence in two places is how the two drift apart.
+ */
+const shotsOf = (beat, beatIndex) =>
+  Array.isArray(beat.shots) && beat.shots.length
+    ? beat.shots.map((s, j) => ({ spec: s, path: `beats[${beatIndex}].shots[${j}]` }))
+    : [{ spec: beat, path: `beats[${beatIndex}]` }];
+
+/**
+ * Chrome and `bleed` are mutually exclusive, and the pair is where a default
+ * silently reverted a fix: `chrome` defaulted to `macos`, chrome forces
+ * `contained` geometry, and so the framing work landed and was undone in the
+ * same session across three videos while the skill still said `bleed` was the
+ * default. A window whose edges have left the frame is not a window.
+ */
+export const checkChromeFraming = (plan) => {
+  const out = [];
+  plan.beats.forEach((b, i) => {
+    if (b.type !== "interaction") return;
+    for (const { spec, path } of shotsOf(b, i)) {
+      if (spec.framing === "bleed" && spec.chrome === "macos") {
+        out.push({
+          check: "chrome_framing",
+          severity: "fail",
+          message: `${path} asks for bleed and macos chrome — chrome forces contained geometry, so the bleed is silently discarded`,
+          target: `${path}.chrome`,
+        });
+      }
+    }
+  });
+  return out;
+};
+
+/**
+ * A lens that does not move has no falloff.
+ *
+ * `zoomBlur` once ramped to a fixed 4px independent of `zoomPeak`, so setting
+ * `zoom: 1` to disable the punch left the blur running — and because the sharp
+ * spot is a small ellipse at the click target, a shot aimed at a toolbar
+ * blurred the whole rest of the app for most of the hero.
+ */
+export const checkZoomBlurCoupling = (plan) => {
+  const out = [];
+  plan.beats.forEach((b, i) => {
+    if (b.type !== "interaction") return;
+    for (const { spec, path } of shotsOf(b, i)) {
+      if (spec.zoom === 1 && Number(spec.zoom_blur) > 0) {
+        out.push({
+          check: "zoom_blur",
+          severity: "fail",
+          message: `${path} disables the zoom but keeps ${spec.zoom_blur}px of blur — a lens that does not move has no falloff, so the product just looks out of focus`,
+          target: `${path}.zoom_blur`,
+        });
+      }
+    }
+  });
+  return out;
+};
+
+/**
+ * theme.ts is the only place a colour is written down. Anywhere else and two
+ * products' videos start looking identical, which is the pipeline being broken
+ * in the way that is hardest to notice.
+ */
+const COLOUR = /#[0-9a-fA-F]{3,8}\b|rgba?\(\s*[0-9]/;
+
+export const checkColourLiterals = (files) =>
+  Object.entries(files)
+    .filter(([rel]) => !rel.endsWith("theme.ts"))
+    .filter(([, src]) => COLOUR.test(src))
+    .map(([rel]) => ({
+      check: "colour_literal",
+      severity: "fail",
+      message: `${rel} contains a colour literal — every colour must resolve through theme.ts or two products get the same video`,
+      target: rel,
+    }));
