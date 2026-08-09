@@ -1,0 +1,29 @@
+{
+  "video_thesis": "Unlock unprecedented productivity at scale.",
+  "hero_moment": "clicking scan",
+  "duration_seconds": 10,
+  "fps": 30,
+  "total_frames": 300,
+  "beats": [
+    {
+      "id": 1,
+      "type": "typography",
+      "frames": [0, 40],
+      "surface": "light",
+      "text": "Before",
+      "accent_word": "Before"
+    },
+    {
+      "id": 2,
+      "type": "interaction",
+      "frames": [50, 110],
+      "recording": "scan",
+      "framing": "bleed",
+      "chrome": "macos",
+      "zoom": 1,
+      "zoom_blur": 4
+    },
+    { "id": 3, "type": "interaction", "frames": [110, 170], "recording": "export" },
+    { "id": 4, "type": "cta", "frames": [170, 280], "url": "https://acme.test" }
+  ]
+}
