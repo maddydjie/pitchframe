@@ -505,11 +505,29 @@ function main() {
    * would have to assume these files exist, and a render on a fresh clone —
    * before this script has ever run — would fail on a missing asset instead
    * of simply being silent.
+   *
+   * `vo` extends that same guarantee to the narration, which used to bypass
+   * the manifest entirely: plan.json is committed carrying narration entries,
+   * public/audio/vo/ is gitignored, so `remotion render` on a fresh clone died
+   * on a 404 for vo/l1.wav rather than rendering silent. The rule was already
+   * written three lines above this one; it just had not been applied to the
+   * one audio path that is generated per run *and* referenced from a
+   * committed file.
    */
+  const voDir = path.join(AUDIO_DIR, "vo");
+  const vo = fs.existsSync(voDir)
+    ? fs
+        .readdirSync(voDir)
+        .filter((f) => /\.(wav|mp3)$/i.test(f))
+        .map((f) => `vo/${f}`)
+        .sort()
+    : [];
+
   fs.writeFileSync(
     path.join(AUDIO_DIR, "audio.json"),
-    JSON.stringify({ cues: true, bed: !music, music, cue_count: cues.length }, null, 2),
+    JSON.stringify({ cues: true, bed: !music, music, cue_count: cues.length, vo }, null, 2),
   );
+  if (!vo.length) log("no voice-over clips on disk — the video renders without narration");
 }
 
 main();

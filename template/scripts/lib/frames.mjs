@@ -82,6 +82,41 @@ export const laplacianEnergy = (gray, w, h, region) => {
   return n ? acc / n : 0;
 };
 
+/**
+ * Variance within one region, so sharpness can be judged against the region's
+ * own content rather than the whole frame's.
+ *
+ * Mixing the two scopes is what made the first version of the blur check fire
+ * on a correct video: whole-frame variance was high because the bars on the
+ * right were bright, while the centre was an empty stretch of chart with no
+ * detail to lose. The frame was perfectly sharp; the metric was comparing a
+ * region's detail against a different region's contrast.
+ */
+export const regionStats = (gray, w, h, region) => {
+  const x0 = Math.max(0, region.x);
+  const y0 = Math.max(0, region.y);
+  const x1 = Math.min(w, region.x + region.w);
+  const y1 = Math.min(h, region.y + region.h);
+
+  let sum = 0;
+  let n = 0;
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) {
+      sum += gray[y * w + x];
+      n++;
+    }
+  }
+  if (!n) return { mean: 0, variance: 0, energy: 0 };
+
+  const mean = sum / n;
+  let acc = 0;
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) acc += (gray[y * w + x] - mean) ** 2;
+  }
+
+  return { mean, variance: acc / n, energy: laplacianEnergy(gray, w, h, region) };
+};
+
 export const frameDelta = (a, b) => {
   let acc = 0;
   for (let i = 0; i < a.length; i++) acc += Math.abs(a[i] - b[i]);

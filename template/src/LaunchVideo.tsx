@@ -135,19 +135,7 @@ export const LaunchVideo: React.FC = () => {
           the things in it. Anything drawn after this would sit outside it. */}
       {plan.grade === false ? null : <Grade />}
 
-      {/* Voice-over. Each clip sits in its own Sequence at the frame its beat
-          starts, because the beat's length *is* the clip's length. */}
-      {(plan.narration ?? []).map((line, i) => (
-        <Sequence
-          key={`vo-${i}`}
-          from={line.from}
-          durationInFrames={line.frames}
-          name={`♪ ${line.file}`}
-          layout="none"
-        >
-          <Audio src={staticFile(`audio/${line.file}`)} />
-        </Sequence>
-      ))}
+      <Narration lines={plan.narration ?? []} />
 
       <Soundtrack wantsBed={plan.music !== false} narrated={(plan.narration ?? []).length > 0} />
     </AbsoluteFill>
@@ -167,6 +155,51 @@ type AudioManifest = {
   bed: boolean;
   /** A real track the user dropped into public/audio/, if there is one. */
   music: string | null;
+  /**
+   * The voice-over clips that are actually on disk, as `vo/<name>.wav`.
+   *
+   * plan.json is committed and names its narration; public/audio/vo/ is
+   * generated per run and gitignored. Those two facts together mean the plan
+   * always claims clips that a fresh clone does not have — so what the plan
+   * asks for has to be intersected with what exists.
+   */
+  vo?: string[];
+};
+
+/**
+ * The voice-over, restricted to the clips that exist.
+ *
+ * Rendering `plan.narration` directly is the obvious implementation and it is
+ * what shipped: it fails the whole render with a 404 on `vo/l1.wav` the first
+ * time anyone clones the repo and renders before generating audio. The rest of
+ * the sound already routes through the manifest for exactly this reason; the
+ * narration was the one path that assumed instead of asking.
+ *
+ * A missing manifest means no narration rather than a broken render — silent
+ * is a legitimate output, and a hard failure here is not.
+ */
+const Narration: React.FC<{ lines: Narration[] }> = ({ lines }) => {
+  const audio = useJsonAsset<AudioManifest>("audio/audio.json");
+  if (audio.status !== "ready" || !lines.length) return null;
+
+  const present = new Set(audio.value.vo ?? []);
+  return (
+    <>
+      {lines
+        .filter((line) => present.has(line.file))
+        .map((line, i) => (
+          <Sequence
+            key={`vo-${i}`}
+            from={line.from}
+            durationInFrames={line.frames}
+            name={`♪ ${line.file}`}
+            layout="none"
+          >
+            <Audio src={staticFile(`audio/${line.file}`)} />
+          </Sequence>
+        ))}
+    </>
+  );
 };
 
 /**
