@@ -104,7 +104,7 @@ skills, five subagents and three slash commands into `.claude/`.
 Also available as a Claude Code plugin:
 
 ```
-/plugin marketplace add Sachin-pro-dev/PITCHFRAME-push-to-prod
+/plugin marketplace add maddydjie/pitchframe
 /plugin install pitchframe@pitchframe
 ```
 
